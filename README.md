@@ -82,6 +82,12 @@ The token that has the key of 'master_token' is the Master Token, and can be use
 Service Tokens have a key name that corresponds to the name of the downstream service.
 
 
+## Developing/Contributing
+
+### IRC
+
+Join `#borderpatrol` on the [Freenode](http://freenode.net)
+
 ### Installation
 
 #### Darwin
@@ -108,14 +114,15 @@ You'll need the Test::Nginx CPAN module.
 
 * bundle install
 * make mocktest
-* In a browser, hit https://localhost:4443/b/
+* In a browser, hit [localhost:4443/b/](https://localhost:4443/b/)
 
 ### Additional Notes
 
-make mocktest uses God to run 4 processes, on the following ports
-4443 Mock BorderPatrol
-9081 Mock Authorization service
-9082 Mock downstream service A
-9083 Mock downstream service B
+`make mocktest`  uses [God](http://godrb.com) to run 4 processes, on the following ports
+
+ * `4443` Mock BorderPatrol
+ * `9081` Mock Authorization service
+ * `9082` Mock downstream service A
+ * `9083` Mock downstream service B
 
 Once you stop Mocktest, manually kill the processes above
