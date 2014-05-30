@@ -4,3 +4,6 @@ Gemfile.lock
 logs
 build
 t/servroot
+*.swp
+.ruby-*
+.vagrant*
