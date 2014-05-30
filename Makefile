@@ -77,7 +77,7 @@ mkdirs:
 	@mkdir -p ${BUILD_PATH}${CONF_DIR}
 	@mkdir -p ${BUILD_PATH}${SBIN_DIR}
 
-compile:
+compile: contrib
 	@if [ ! -f ${NGINX_PATH}/Makefile ]; then (cd ${NGINX_PATH} && \
 	./configure --prefix=/usr \
 							--sbin-path=${SBIN_DIR}/borderpatrol \
@@ -92,15 +92,13 @@ compile:
 	fi;
 	@(cd ${NGINX_PATH} && make -j2)
 
-.PHONY : test
-
 test: build
 	@TEST_NGINX_BINARY=${PKG_NAME} PATH=${BUILD_PATH}${SBIN_DIR}:${PATH} prove -r ${TEST_DIR}/*.t
 
 mocktest: build
 	god -Dbc t/borderpatrol.god
 
-make clean:
+clean:
 	rm -rf ${BUILD_PATH}
 	rm -rf ${DESTDIR}
 	rm -rf ngx_borderpatrol*
@@ -147,3 +145,5 @@ pkg: test
 	  usr/ etc/ var/
 
 	mv ${DESTDIR}/*.deb ${PWD}/
+
+.PHONY : test build mocktest mkdirs submodules build pkg distclean clean compile all
