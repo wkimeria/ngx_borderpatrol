@@ -1,0 +1,19 @@
+digraph auth {
+  u [label="End-user"];
+  bp [label="Border Patrol", shape=rect];
+  km [label="Keymaster", shape=rect];
+  mc [label="Memcache", shape=rect];
+  serv [label="Service A\n(requires auth)", shape=rect];
+  noauthserv [label="Service B\n(no auth)", shape=rect];
+
+  u -> bp [label="Login Request"];
+  u -> bp [label="Privileged request\n(with session cookie)", color=red];
+  u -> bp [label="Unprivileged request", color=blue];
+
+  bp -> km [dir=both, style=dashed, label="authenticate"];
+  bp -> mc [style=dashed, label="store session"];
+  bp -> mc [style=dashed, label="validate session", color=red];
+
+  bp -> serv [label="Modified HTTP request\nwith token", color=red];
+  bp -> noauthserv [label="Unmodified HTTP request", color=blue];
+}

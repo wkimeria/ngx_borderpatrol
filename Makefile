@@ -146,4 +146,8 @@ pkg: test
 
 	mv ${DESTDIR}/*.deb ${PWD}/
 
-.PHONY : test build mocktest mkdirs submodules build pkg distclean clean compile all
+
+doc:
+	dot -Tpng -odoc/borderpatrol.png doc/borderpatrol.dot
+
+.PHONY : test build mocktest mkdirs submodules build pkg distclean clean compile all doc
