@@ -7,9 +7,8 @@ hands out tokens to clients to access that service. You may not want those token
 over SSL, for a variety of reasons. To this end, BorderPatrol maintains a lookup table of session-id to auth token
 in memcached.
 
-## Overview Diagram
-
-![Overview diagram](/lookout/ngx_borderpatrol/raw/master/doc/borderpatrol.png)
+![Overview
+diagram](https://raw.githubusercontent.com/lookout/ngx_borderpatrol/master/doc/borderpatrol.png)
 
 ## Use cases
 
