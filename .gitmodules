@@ -16,3 +16,6 @@
 [submodule "contrib/headers-more-nginx-module"]
 	path = contrib/headers-more-nginx-module
 	url = https://github.com/agentzh/headers-more-nginx-module.git
+[submodule "contrib/nginx-sticky-module-ng"]
+	path = contrib/nginx-sticky-module-ng
+	url = https://bitbucket.org/nginx-goodies/nginx-sticky-module-ng.git
