@@ -18,7 +18,7 @@ NDK_PATH=${CONTRIB_PATH}/ngx_devel_kit
 MEMC_NGINX_PATH=${CONTRIB_PATH}/memc-nginx-module
 LUA_MODULE_PATH=${CONTRIB_PATH}/lua-nginx-module
 ECHO_MODULE_PATH=${CONTRIB_PATH}/echo-nginx-module
-STICKY_MODULE_PATH=${CONTRIB_PATH}/nginx-sticky-module
+STICKY_MODULE_PATH=${CONTRIB_PATH}/nginx-sticky-module-ng
 HEADERS_MORE_MODULE_PATH=${CONTRIB_PATH}/headers-more-nginx-module
 
 NGINX_MODULES=--add-module=${NDK_PATH} \
