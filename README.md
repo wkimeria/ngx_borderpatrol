@@ -83,13 +83,13 @@ Tokens have a key name that corresponds to the name of the downstream service.
 
 ### IRC
 
-Join `#borderpatrol` on the [Freenode](http://freenode.net)
+Join `#borderpatrol` on the [Freenode](https://freenode.net)
 
 ### Installation
 
 #### Darwin
 
-* Get [homebrew](http://mxcl.github.io/homebrew/)
+* Get [homebrew](http://brew.sh/)
 * brew install luarocks
 * brew install pcre
 * brew install lua

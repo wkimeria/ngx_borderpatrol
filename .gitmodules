@@ -6,16 +6,16 @@
 	url = https://github.com/simpl/ngx_devel_kit.git
 [submodule "contrib/lua-nginx-module"]
 	path = contrib/lua-nginx-module
-	url = https://github.com/chaoslawful/lua-nginx-module.git
+	url = https://github.com/openresty/lua-nginx-module.git
 [submodule "contrib/memc-nginx-module"]
 	path = contrib/memc-nginx-module
-	url = https://github.com/agentzh/memc-nginx-module.git
+	url = https://github.com/openresty/memc-nginx-module.git
 [submodule "contrib/echo-nginx-module"]
 	path = contrib/echo-nginx-module
-	url = https://github.com/agentzh/echo-nginx-module.git
+	url = https://github.com/openresty/echo-nginx-module.git
 [submodule "contrib/headers-more-nginx-module"]
 	path = contrib/headers-more-nginx-module
-	url = https://github.com/agentzh/headers-more-nginx-module.git
+	url = https://github.com/openresty/headers-more-nginx-module.git
 [submodule "contrib/nginx-sticky-module-ng"]
 	path = contrib/nginx-sticky-module-ng
 	url = https://bitbucket.org/nginx-goodies/nginx-sticky-module-ng.git
