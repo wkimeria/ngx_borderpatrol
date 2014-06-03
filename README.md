@@ -1,5 +1,7 @@
 # BorderPatrol for Nginx
 
+[![Build Status](https://travis-ci.org/lookout/ngx_borderpatrol.svg?branch=master)](https://travis-ci.org/lookout/ngx_borderpatrol)
+
 BorderPatrol is an nginx module to perform authentication and session management at the border of your network.
 
 BorderPatrol makes the assumption that you have some set of services that require authentication and a service that
