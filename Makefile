@@ -76,6 +76,7 @@ mkdirs:
 	@mkdir -p ${BUILD_PATH}${SHARE_DIR}
 	@mkdir -p ${BUILD_PATH}${CONF_DIR}
 	@mkdir -p ${BUILD_PATH}${SBIN_DIR}
+	@mkdir -p ${BUILD_PATH}${LOG_DIR}
 
 compile: contrib
 	@if [ ! -f ${NGINX_PATH}/Makefile ]; then (cd ${NGINX_PATH} && \
@@ -127,7 +128,6 @@ pkg: test
 	chmod 755 ${DESTDIR}/etc/init.d/borderpatrol
 
 	# Create extra directories
-	mkdir -p ${DESTDIR}/var/log/borderpatrol
 	mkdir -p ${DESTDIR}/var/borderpatrol
 	mkdir -p ${DESTDIR}/var/cache/borderpatrol
 

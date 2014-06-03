@@ -1,0 +1,19 @@
+language: perl
+
+services:
+  - memcached
+
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq luarocks
+  - cpanm Test::Nginx
+
+install:
+  - make && make test
+
+notifications:
+  irc:
+    channels:
+    - "irc.freenode.net#borderpatrol"
+    use_notice: true
+    skip_join: true
