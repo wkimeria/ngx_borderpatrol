@@ -54,6 +54,7 @@ all: build
 $(BUILD_PATH)/.install_rocks:
 	@$(LUAROCKS) install luajson --to=$(BUILD_PATH)/usr
 	@$(LUAROCKS) install luacrypto --to=$(BUILD_PATH)/usr
+	@$(LUAROCKS) install statsd --to=$(BUILD_PATH)/usr
 	@touch $(BUILD_PATH)/.install_rocks
 
 build: submodules compile mkdirs $(BUILD_PATH)/.install_rocks

@@ -43,7 +43,10 @@ http {
   }
 
   # Service mappings, map service urls to service names
-  init_by_lua 'service_mappings = {b="smb", c="flexd"}';
+  init_by_lua 'service_mappings = {b="smb", c="flexd"}
+               statsd_prefix = "localhost"
+               statsd_host = "localhost"
+               statsd_port = 8125';
 
   server {
     listen  4443 default_server ssl;
