@@ -21,7 +21,6 @@ end
 --
 local function log(metric)
   local metric = statsd_prefix .. "." .. metric
-  if unexpected_condition then error() end
   statsd:increment( metric, 1 )
 end
 

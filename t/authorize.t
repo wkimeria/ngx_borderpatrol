@@ -17,7 +17,8 @@ __DATA__
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 --- config
@@ -51,7 +52,8 @@ STORED\r
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 --- config
@@ -102,9 +104,10 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-                statsd_prefix = "localhost"
-                statsd_host = "localhost"
-                statsd_port = 8125';
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
+               statsd_host = "localhost"
+               statsd_port = 8125';
 --- config
 location /memc_setup {
     internal;
@@ -152,7 +155,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 --- config
@@ -194,7 +198,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 --- config
@@ -244,7 +249,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="smb", s="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 --- config

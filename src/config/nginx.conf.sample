@@ -44,7 +44,8 @@ http {
 
   # Service mappings, map service urls to service names
   init_by_lua 'service_mappings = {b="smb", c="flexd"}
-               statsd_prefix = "localhost"
+               statsd_namespace = "borderpatrol"
+               statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 
