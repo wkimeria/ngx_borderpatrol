@@ -20,34 +20,25 @@ if statsd_host and statsd_port then
     })
   end
 else
-  ngx.log(ngx.ERR, "==== Statsd logging not configured:")
-  ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+  ngx.log(ngx.INFO, "==== Statsd logging not configured:")
 end
 
 --
 -- log metrics to statsd
 --
 local function log(metric)
-  if statsd_prefix then
-    local metric = statsd_prefix .. "." .. metric
-  else
-    local metric = metric
-  end
-  statsd:increment( metric, 1 )
-end
-
---
--- log metrics to statsd, don't raise exception on failure
---
-local function safe_log(metric)
   if statsd then
-    local status, err = pcall(log,metric)
+    local met
+    if statsd_prefix then
+       met = statsd_prefix .. "." .. metric
+    else
+      met = metric
+    end
+    local status, err = pcall(function() statsd:increment( met, 1) end)
     if status == false then
       ngx.log(ngx.DEBUG, "==== unable to log to statsd: " .. err)
     end
   end
 end
-
 module.log = log
-module.safe_log = safe_log
 return module
