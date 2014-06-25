@@ -5,12 +5,20 @@ local module = {}
 local statsd
 
 -- create statsd object, which will open up a persistent port
-if statsd_host and statsd_port and statsd_prefix then
-  statsd = Statsd({
-    host = statsd_host,
-    port = statsd_port,
-    namespace = "borderpatrol"
-  })
+if statsd_host and statsd_port then
+  local namespace = statsd_namespace
+  if namespace then
+    statsd = Statsd({
+      host = statsd_host,
+      port = statsd_port,
+      namespace = namespace
+    })
+  else
+    statsd = Statsd({
+      host = statsd_host,
+      port = statsd_port
+    })
+  end
 else
   ngx.log(ngx.ERR, "==== Statsd logging not configured:")
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
@@ -20,7 +28,11 @@ end
 -- log metrics to statsd
 --
 local function log(metric)
-  local metric = statsd_prefix .. "." .. metric
+  if statsd_prefix then
+    local metric = statsd_prefix .. "." .. metric
+  else
+    local metric = metric
+  end
   statsd:increment( metric, 1 )
 end
 
