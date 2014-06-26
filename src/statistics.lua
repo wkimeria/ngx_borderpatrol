@@ -34,7 +34,7 @@ local function log(metric)
     else
       met = metric
     end
-    local status, err = pcall(function() statsd:increment( met, 1) end)
+    local status, err = pcall(statsd.increment, statsd, met, 1)
     if status == false then
       ngx.log(ngx.DEBUG, "==== unable to log to statsd: " .. err)
     end
