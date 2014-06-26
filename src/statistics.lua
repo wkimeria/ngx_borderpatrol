@@ -20,7 +20,7 @@ if statsd_host and statsd_port then
     })
   end
 else
-  ngx.log(ngx.INFO, "==== Statsd logging not configured:")
+  ngx.log(ngx.INFO, "==== Statsd logging not configured")
 end
 
 --
