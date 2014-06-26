@@ -5,20 +5,15 @@ local module = {}
 local statsd
 
 -- create statsd object, which will open up a persistent port
-if statsd_host and statsd_port then
-  local namespace = statsd_namespace
-  if namespace then
-    statsd = Statsd({
-      host = statsd_host,
-      port = statsd_port,
-      namespace = namespace
-    })
-  else
-    statsd = Statsd({
-      host = statsd_host,
-      port = statsd_port
-    })
+if statsd_host then
+  opts = {host = statsd_host}
+  if statsd_port then
+    opts.port = statsd_port
   end
+  if statsd_namespace then
+    opts.namespace = statsd_namespace
+  end
+  statsd = Statsd(opts)
 else
   ngx.log(ngx.INFO, "==== Statsd logging not configured")
 end
@@ -34,7 +29,7 @@ local function log(metric)
     else
       met = metric
     end
-    local status, err = pcall(function() statsd:increment( met, 1) end)
+    local status, err = pcall(statsd.increment, statsd, met, 1)
     if status == false then
       ngx.log(ngx.DEBUG, "==== unable to log to statsd: " .. err)
     end
