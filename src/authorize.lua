@@ -57,7 +57,11 @@ ngx.log(ngx.DEBUG, "==== POST /account " .. res.status .. " " .. res.body)
 
 -- assume any 2xx is success
 -- On failure, redirect to login
+
+local statistics = require("statistics")
+
 if res.status >= ngx.HTTP_SPECIAL_RESPONSE then
+  statistics.log('login.failure')
   ngx.log(ngx.DEBUG, "==== Authorization against Account Service failed: " .. res.body)
   ngx.redirect('/account')
 end
@@ -68,15 +72,19 @@ local all_tokens = json.decode(all_tokens_json)
 
 -- looking for auth tokens
 if not all_tokens then
+  statistics.log('login.failure')
   ngx.log(ngx.DEBUG, "==== no tokens found, redirecting to /account")
   ngx.redirect('/account')
 end
 
 -- looking for service token
 if not all_tokens["service_tokens"][service] then
+  statistics.log('login.failure')
   ngx.log(ngx.DEBUG, "==== parse failure, or service token not found, redirecting to /account")
   ngx.redirect('/account')
 end
+
+statistics.log('login.success')
 
 -- Extract token for specific service
 local auth_token = all_tokens["service_tokens"][service]
