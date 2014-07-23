@@ -28,11 +28,6 @@ NGINX_MODULES=--add-module=${NDK_PATH} \
 							--add-module=${HEADERS_MORE_MODULE_PATH} \
 							--add-module=${ECHO_MODULE_PATH} # only needed for
 
-export LUA_JIT_VERSION=2.0.2
-export LUAJIT_LIB=${HOME}/local/lib/
-export LUAJIT_INC=${HOME}/local/include/luajit-2.0/
-export LUAJIT_MD5=112dfb82548b03377fbefbba2e0e3a5b
-
 # build locations
 BUILD_PATH=${MODULE_PATH}/build
 DESTDIR=${PWD}/${PKG_NAME}
@@ -50,7 +45,7 @@ TEST_RUN_DIR = ${TEST_DIR}/servroot
 UNAME:=$(shell uname -s)
 
 ifeq ($(UNAME), Darwin)
-CFLAGS+="-I /usr/local/include -Wno-error -DNGX_LUA_USE_ASSERT -DLUA_USE_APICHECK"
+CFLAGS+="-I /usr/local/include -Wno-error"
 LD_FLAGS+="-L /usr/local/lib -L /usr/lib -liconv"
 endif
 
@@ -62,7 +57,7 @@ $(BUILD_PATH)/.install_rocks:
 	@$(LUAROCKS) install statsd --to=$(BUILD_PATH)/usr
 	@touch $(BUILD_PATH)/.install_rocks
 
-build: prepare submodules compile mkdirs $(BUILD_PATH)/.install_rocks
+build: submodules compile mkdirs $(BUILD_PATH)/.install_rocks
 	@cp ${NGINX_PATH}/objs/nginx ${BUILD_PATH}${SBIN_DIR}/${PKG_NAME}
 	@cp -rp ${PWD}/src/*.lua ${BUILD_PATH}${SHARE_DIR}
 	@cp ${PWD}/src/robots.txt ${BUILD_PATH}${SHARE_DIR}
@@ -70,15 +65,8 @@ build: prepare submodules compile mkdirs $(BUILD_PATH)/.install_rocks
 	@cp ${PWD}/src/ssl/server.crt ${BUILD_PATH}${CONF_DIR}/ssl/server.crt
 	@cp ${PWD}/src/ssl/server.key ${BUILD_PATH}${CONF_DIR}/ssl/server.key
 
-prepare:
-	@if [ ! -d ${LUAJIT_INC} ]; then (wget http://luajit.org/download/LuaJIT-${LUA_JIT_VERSION}.tar.gz && \
-	tar zxf LuaJIT-${LUA_JIT_VERSION}.tar.gz && \
-	if [ `md5 -q LuaJIT-${LUA_JIT_VERSION}.tar.gz` != "${LUAJIT_MD5}" ]; then echo "LuaJIT-${LUA_JIT_VERSION}.tar.gz has invalid md5 hash" &&  exit -1;fi && \
-	make -C LuaJIT-${LUA_JIT_VERSION} && \
-	make -C LuaJIT-${LUA_JIT_VERSION} install PREFIX=${HOME}/local) \
-	fi
-
 submodules:
+	git submodule init
 	git submodule update
 
 mkdirs:
@@ -106,7 +94,7 @@ compile: contrib
 	fi;
 	@(cd ${NGINX_PATH} && make -j2)
 
-test: prepare build
+test: build
 	@TEST_NGINX_BINARY=${PKG_NAME} PATH=${BUILD_PATH}${SBIN_DIR}:${PATH} prove -r ${TEST_DIR}/*.t
 
 mocktest: build
@@ -117,7 +105,6 @@ clean:
 	rm -rf ${DESTDIR}
 	rm -rf ngx_borderpatrol*
 	rm -rf *.deb
-	rm -rf LuaJIT-${LUA_JIT_VERSION}*
 
 distclean: clean
 	(cd ${NGINX_PATH} && if [ -f Makefile ]; then make clean; fi;)
@@ -164,4 +151,4 @@ pkg: test
 doc:
 	dot -Tpng -odoc/borderpatrol.png doc/borderpatrol.dot
 
-.PHONY : test build mocktest mkdirs submodules build pkg distclean clean compile all doc prepare
+.PHONY : test build mocktest mkdirs submodules build pkg distclean clean compile all doc
