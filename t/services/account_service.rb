@@ -69,7 +69,6 @@ __END__
     Password
     %input{:name => "password", :type => "password", :value => "password"}
   %br/
-  %input{:name => "service", :type => "hidden", :value => "smb"}
   %input{:type => "submit", :name => "login", :value => "login"}
 
 @@ password
@@ -85,5 +84,4 @@ __END__
     Password
     %input{:name => "password", :type => "password", :value => "password"}
   %br/
-  %input{:name => "service", :type => "hidden", :value => "smb"}
   %input{:type => "submit", :name => "login", :value => "login"}
