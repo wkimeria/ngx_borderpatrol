@@ -124,4 +124,8 @@ You'll need the Test::Nginx CPAN module.
  * `9083` Mock downstream service B
  * `9084` Mock Account Service
 
-Once you stop Mocktest, manually kill the processes above
+Once you stop Mocktest, manually kill the processes above (i.e)
+
+pkill -9 -f nginx
+pkill -9 -f god
+pkill -9 -f shotgun
