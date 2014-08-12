@@ -22,28 +22,30 @@ http {
     server localhost:9082;
   }
 
-   # this is an app server protected by border patrol. If it returns a 401
-   # when an attempt is made to access a protected resource, borderpatrol redirects
-   # to the account service login
-   upstream c {
-     server localhost:9083;
-   }
+  # this is an app server protected by border patrol. If it returns a 401
+  # when an attempt is made to access a protected resource, borderpatrol redirects
+  # to the account service login
+  upstream c {
+    server localhost:9083;
+  }
 
-   # this is the account service. displays the login screen and also calls the auth service
-   # to get a master token and a service token
-   upstream account {
-    server localhost:9084;
-   }
+  # this is the account service. displays the login screen and also calls the auth service
+  # to get a master token and a service token
+  upstream account {
+    server localhost:9084; # use this if you are running the mock account service
+    # server localhost:4567;
+  }
 
   # Nginx Lua has no SSL support for cosockets. This is unfortunate.
   # This proxies all requests to use the native NGINX request, though
   # it's a little hacky and sort of dirty.
   upstream token_server {
-    server localhost:9081;
+    server localhost:9081; # Use this if you are running the mock keymaster service
+    # server localhost:3000;  # Actual keymaster service running locally
   }
 
   # Service mappings, map service urls to service names
-  init_by_lua 'service_mappings = {b="smb", c="flexd"}
+  init_by_lua 'service_mappings = {b="smb", c="flexd", account="checkpoint"}
                statsd_namespace = "borderpatrol"
                statsd_prefix = "staging"
                statsd_host = "localhost"
@@ -102,6 +104,12 @@ http {
       proxy_set_header   Host $host;
     }
 
+    # Serve static content
+    location ~ ^/(css|javascript|fonts|images)/ {
+      rewrite ^/account(.*)$ $1 break;
+      proxy_pass http://account;
+    }
+
     location = / {
       limit_req zone=auth_zone burst=25;
       content_by_lua_file '../../build/usr/share/borderpatrol/authorize.lua';
@@ -111,7 +119,7 @@ http {
       content_by_lua_file '../../build/usr/share/borderpatrol/logout.lua';
     }
 
-    location ~ /(b|c)* {
+    location ~ ^/(b|c|account) {
       set $original_uri $uri;
       rewrite ^/(.*) / break;
       set $auth_token $http_auth_token;
