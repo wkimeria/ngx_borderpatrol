@@ -112,7 +112,12 @@ http {
 
     location = / {
       limit_req zone=auth_zone burst=25;
-      content_by_lua_file '../../build/usr/share/borderpatrol/authorize.lua';
+      if ($request_method = POST ) {
+        content_by_lua_file '../../build/usr/share/borderpatrol/authorize.lua';
+      }
+      if ($request_method = GET ) {
+        return 301 $scheme://www.example.com;
+      }
     }
 
     location = /logout {
