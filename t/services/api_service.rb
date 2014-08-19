@@ -39,7 +39,7 @@ __END__
 
 @@ index
 %h1 Welcome to the First Server!
-%a{:href => '/logout?destination=/b/'}
+%a{:href => '/logout'}
   logout
 
 @@ loggedout
