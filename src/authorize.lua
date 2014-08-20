@@ -43,7 +43,7 @@ if not service then
   else
     ngx.log(ngx.DEBUG, "==== service not set for service uri: " .. service_uri)
   end
-  ngx.redirect('/account/password')
+  ngx.redirect('/account')
 end
 
 ngx.req.read_body()
@@ -63,7 +63,13 @@ local statistics = require("statistics")
 if res.status >= ngx.HTTP_SPECIAL_RESPONSE then
   statistics.log('login.failure')
   ngx.log(ngx.DEBUG, "==== Authorization against Account Service failed: " .. res.body)
-  ngx.redirect('/account')
+  ngx.status = res.status
+  -- pass through headers
+  for k, v in pairs(res.header) do
+    ngx.header[k] = v
+  end
+  ngx.print(res.body)
+  return
 end
 
 -- parse the response body

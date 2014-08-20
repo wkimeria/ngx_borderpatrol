@@ -135,7 +135,7 @@ Cookie: border_session=MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHr
 Set-Cookie: border_session=.+:.+; path=/; HttpOnly; Secure;$
 Location: http://localhost(?::\d+)?/b$
 --- error_code eval
-[200,302]
+[200,403]
 
 === TEST 3: test failed login with memcached down
 --- main_config
@@ -221,7 +221,7 @@ Cookie: border_session=MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHr
 Set-Cookie: border_session=.+:.+; path=/; HttpOnly; Secure;$
 Location: http://localhost(?::\d+)?/b$
 --- error_code eval
-[200,302]
+[200,500]
 
 === TEST 5: test invalid service url
 --- main_config
