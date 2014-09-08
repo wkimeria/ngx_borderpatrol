@@ -129,7 +129,7 @@ http {
       rewrite ^/(.*) / break;
       set $auth_token $http_auth_token;
       access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-      proxy_set_header auth-token $auth_token;
+      proxy_set_header Auth-Token $auth_token;
       proxy_pass http://$1;
       proxy_intercept_errors on;
       error_page 401  = @redirect;
@@ -150,7 +150,7 @@ http {
     location / {
       set $auth_token $http_auth_token;
       access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-      proxy_set_header auth-token $auth_token;
+      proxy_set_header Auth-Token $auth_token;
 
       # http://hostname/upstream_name/uri -> http://upstream_name/uri
       rewrite ^/([^/]+)/?(.*)$ /$2 break;
