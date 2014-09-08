@@ -9,7 +9,7 @@ run_tests();
 
 __DATA__
 
-=== TEST 1: test w/ auth-token present in client request
+=== TEST 1: test w/ Auth-Token present in client request
 --- main_config
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
@@ -33,7 +33,7 @@ location /auth {
 location /b/testpath {
     set $auth_token $http_auth_token;
     access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-    proxy_set_header auth-token $auth_token;
+    proxy_set_header Auth-Token $auth_token;
 
     # http://hostname/upstream_name/uri -> http://upstream_name/uri
     rewrite ^/([^/]+)/?(.*)$ /$2 break;
@@ -44,12 +44,12 @@ location /b/testpath {
 --- request
 GET /b/testpath
 --- more_headers
-auth-token: tokentokentokentoken
+Auth-Token: tokentokentokentoken
 --- error_code: 200
 --- response_body_like
-auth-token: tokentokentoken.+everything is ok$
+Auth-Token: tokentokentoken.+everything is ok$
 
-=== TEST 2: test w/o auth-token not present in client request but with valid session
+=== TEST 2: test w/o Auth-Token not present in client request but with valid session
 --- main_config
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
@@ -74,7 +74,7 @@ location /auth {
 location /b/testpath {
     set $auth_token $http_auth_token;
     access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-    proxy_set_header auth-token $auth_token;
+    proxy_set_header Auth-Token $auth_token;
 
     # http://hostname/upstream_name/uri -> http://upstream_name/uri
     rewrite ^/([^/]+)/?(.*)$ /$2 break;
@@ -88,4 +88,4 @@ GET /b/testpath
 Cookie: border_session=this-is-a-session-id # not checked here!
 --- error_code: 200
 --- response_body_like
-auth-token: tokentokentoken.+everything is ok$
+Auth-Token: tokentokentoken.+everything is ok$
