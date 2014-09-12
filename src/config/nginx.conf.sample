@@ -134,7 +134,7 @@ http {
       rewrite ^/(.*) / break;
       set $auth_token $http_auth_token;
       access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-      proxy_set_header auth-token $auth_token;
+      proxy_set_header Auth-token $auth_token;
       proxy_set_header Host $http_host;
       proxy_pass http://$1;
       proxy_intercept_errors on;
