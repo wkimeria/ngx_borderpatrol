@@ -104,8 +104,9 @@ http {
       proxy_set_header   Host $host;
     }
 
-    # Serve static content from downstream account service
-      location ~ account/(css|javascript|fonts|images)/ {
+    # Serve static content
+    location ~ ^/(css|javascript|fonts|images)/ {
+      rewrite ^/account(.*)$ $1 break;
       proxy_pass http://account;
     }
 
@@ -141,6 +142,11 @@ http {
     }
 
     location @redirect {
+      # For Ajax requests, we want to return a 401 with a descriptive message
+      if ($http_x_requested_with = "XMLHttpRequest") {
+        more_set_headers 'Content-Type: application/json';
+        return 401 '{"CODE": "SESSION_EXPIRED"}';
+      }
       content_by_lua_file '../../build/usr/share/borderpatrol/redirect.lua';
     }
 
