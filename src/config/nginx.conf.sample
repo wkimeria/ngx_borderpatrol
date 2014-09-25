@@ -104,9 +104,8 @@ http {
       proxy_set_header   Host $host;
     }
 
-    # Serve static content
-    location ~ ^/(css|javascript|fonts|images)/ {
-      rewrite ^/account(.*)$ $1 break;
+    # Serve static content from downstream account service
+    location ~ ^/account/(css|javascript|fonts|images)/ {
       proxy_pass http://account;
     }
 
