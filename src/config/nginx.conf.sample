@@ -141,6 +141,11 @@ http {
     }
 
     location @redirect {
+      # For Ajax requests, we want to return a 401 with a descriptive message
+      if ($http_x_requested_with = "XMLHttpRequest") {
+        more_set_headers 'Content-Type: application/json';
+        return 401 '{"CODE": "SESSION_EXPIRED"}';
+      }
       content_by_lua_file '../../build/usr/share/borderpatrol/redirect.lua';
     }
 
