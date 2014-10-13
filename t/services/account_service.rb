@@ -7,7 +7,7 @@ KEYMASTER_URI = 'http://localhost:9081/api/auth/service/v1/account_master_token.
 
 
 post '/' do
-  $stderr.write "apiserver #{request.url}\n"
+  $stderr.write "accountservice #{request.url}\n"
   service = request['service']
   username = request['username']
   password = request['password']
@@ -27,13 +27,25 @@ post '/' do
 end
 
 get '/' do
-  $stderr.write "apiserver #{request.url}\n"
+  $stderr.write "accountservice #{request.url}\n"
   haml :login, :content_type => 'text/html'
 end
 
 get '/password' do
-  $stderr.write "apiserver #{request.url}\n"
+  $stderr.write "accountservice #{request.url}\n"
   haml :password, :content_type => 'text/html'
+end
+
+get '/settings' do
+  $stderr.write "accountservice #{request.url}\n"
+  token = request.env['HTTP_AUTH_TOKEN']
+  $stderr.write "accountservice #{request.url} token = #{token}\n"
+
+  if token != 'LIVEKALECHECKPOINT'
+    halt 401, 'Ooops, request not authenticated. Did you login?'
+  else
+    haml :settings, :content_type => 'text/html'
+  end
 end
 
 __END__
@@ -85,3 +97,7 @@ __END__
     %input{:name => "password", :type => "password", :value => "password"}
   %br/
   %input{:type => "submit", :name => "login", :value => "login"}
+
+@@ settings
+%h1
+  THIS IS THE ACCOUNT SETTINGS PAGE
