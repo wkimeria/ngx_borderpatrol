@@ -123,6 +123,13 @@ http {
       content_by_lua_file '../../build/usr/share/borderpatrol/logout.lua';
     }
 
+    #http://wiki.nginx.org/HttpCoreModule#location
+    location = /account/forbidden {
+      rewrite ^/(.*) / break;
+      proxy_set_header Host $http_host;
+      proxy_pass http://$1;
+    }
+
     location ~ ^/(b|c|account) {
       set $original_uri $uri;
       set $via "1.1  $host (Borderpatrol)";
@@ -138,6 +145,12 @@ http {
       proxy_pass http://$1;
       proxy_intercept_errors on;
       error_page 401  = @redirect;
+      error_page 403 = @forbidden;
+    }
+
+    location @forbidden {
+      # This can be a redirect, a custom 403 page or a simple status
+      return 302 $scheme://$host:$server_port/account/forbidden;
     }
 
     location @redirect {

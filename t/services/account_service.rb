@@ -48,6 +48,10 @@ get '/settings' do
   end
 end
 
+get '/forbidden' do
+  halt(403, haml(:forbidden))
+end
+
 __END__
 
 @@ layout
@@ -101,3 +105,7 @@ __END__
 @@ settings
 %h1
   THIS IS THE ACCOUNT SETTINGS PAGE
+
+@@ forbidden
+%h1
+  403 FORBIDDEN
