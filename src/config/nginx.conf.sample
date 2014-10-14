@@ -2,6 +2,7 @@ pid        /tmp/nginx.pid;
 daemon     off;
 
 http {
+  proxy_http_version 1.1;
   lua_package_path "../../build/usr/share/borderpatrol/?.lua;../../build/usr/share/lua/5.1/?.lua;;";
   lua_package_cpath "../../build/usr/lib/lua/5.1/?.so;;";
   limit_req_zone $binary_remote_addr zone=auth_zone:100m rate=100r/m;
