@@ -52,6 +52,10 @@ get '/forbidden' do
   halt(403, haml(:forbidden))
 end
 
+get '/not_found' do
+  halt(404, haml(:not_found))
+end
+
 __END__
 
 @@ layout
@@ -109,3 +113,7 @@ __END__
 @@ forbidden
 %h1
   403 FORBIDDEN
+
+@@ not_found
+%h1
+  404 NOT FOUND
