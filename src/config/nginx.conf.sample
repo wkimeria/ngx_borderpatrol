@@ -170,16 +170,10 @@ http {
       alias ../../build/usr/share/borderpatrol/robots.txt;
     }
 
-    location / {
-      set $auth_token $http_auth_token;
-      access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-      proxy_set_header Auth-Token $auth_token;
-
-      # http://hostname/upstream_name/uri -> http://upstream_name/uri
-      rewrite ^/([^/]+)/?(.*)$ /$2 break;
-      proxy_pass         http://$1;
-      proxy_redirect     off;
-      proxy_set_header   Host $host;
+    # This should be the last location directive, designed to capture any
+    # uri's not previously matched
+    location ~ ^/.* {
+      return 302 $scheme://$host:$server_port/account/not_found;
     }
   }
 }
