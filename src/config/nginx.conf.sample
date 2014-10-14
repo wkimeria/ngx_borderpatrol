@@ -115,7 +115,7 @@ http {
         content_by_lua_file '../../build/usr/share/borderpatrol/authorize.lua';
       }
       if ($request_method = GET ) {
-        return 301 $scheme://www.example.com;
+        return 301 $scheme://$host:$server_port/account/settings;
       }
     }
 
