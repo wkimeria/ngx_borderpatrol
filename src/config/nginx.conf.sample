@@ -143,6 +143,7 @@ http {
       access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
       proxy_set_header Auth-token $auth_token;
       proxy_set_header Host $http_host;
+      proxy_set_header X-Forwarded-Proto $scheme;
       proxy_pass http://$1;
       proxy_intercept_errors on;
       error_page 401  = @redirect;
