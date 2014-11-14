@@ -5,7 +5,6 @@ require "uri"
 
 KEYMASTER_URI = 'http://localhost:9081/api/auth/service/v1/account_master_token.json'
 
-
 post '/' do
   $stderr.write "accountservice #{request.url}\n"
   service = request['service']
@@ -68,7 +67,7 @@ __END__
 
 @@ index
 %h1 Welcome to the Account Service!
-%a{:href => '/logout?destination=/b/'}
+%a{:href => '/logout?destination=/account/settings'}
   logout
 
 @@ loggedout
@@ -80,7 +79,7 @@ __END__
 %h1
   ACCOUNT SERVICE LOGIN
 
-%form{:action => "/", :method => 'post'}
+%form{:action => "/account/login", :method => 'post'}
   %label
     Username
     %input{:name => "username", :type => "text", :value => "user@example.com"}

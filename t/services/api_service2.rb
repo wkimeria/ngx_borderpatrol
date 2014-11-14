@@ -5,7 +5,7 @@ require 'sinatra'
     token = request.env['HTTP_AUTH_TOKEN']
     $stderr.write "apiserver2 #{request.url} token = #{token}\n"
 
-    if token != 'LIVEKALEFLEXD'
+    if token != "LIVEKALEENTERPRIZE"
       halt 401, 'Ooops, request not authenticated. Did you login?'
       #haml :loggedout, :content_type => 'text/html'
     else
@@ -38,11 +38,11 @@ __END__
     = yield
 
 @@ index
-%h1 Welcome to the Second Server!
-%a{:href => '/logout?destination=/c/'}
+%h1 Welcome to the Second Server: Enterprise!
+%a{:href => '/logout'}
   logout
 
 @@ loggedout
 %h1 Oops, You are not logged in.
-%a{:href => '/c'}
+%a{:href => '/'}
   login

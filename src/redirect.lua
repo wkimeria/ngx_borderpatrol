@@ -21,5 +21,3 @@ else
   ngx.log(ngx.ERR, "==== an error occurred trying to save session: " .. res.status)
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
 end
-
-

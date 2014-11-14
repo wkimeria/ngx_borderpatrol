@@ -27,22 +27,36 @@ ngx.log(ngx.DEBUG, "==== GET /session?id=BP_URL_SID_" .. session_id .. " " .. re
 
 -- Get original downstream url they were going to before being redirected
 original_url = res.body
+original_host = ngx.req.get_headers()["Host"]
 
 -- get service name from first part of original uri
 local service_uri = string.match(original_url, "^/([^/]+)")
+local service_host = string.match(original_host, "^([^.]+)")
 local service = nil
-if service_uri then
+
+if service_host then
+  ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
+  service = subdomain_mappings[service_host]
+else
+  ngx.log(ngx.DEBUG, "==== no service host, trying service uri")
+end
+
+if service_uri and not service then
   ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
   service = service_mappings[service_uri]
+else
+  ngx.log(ngx.DEBUG, "==== no service uri")
 end
 
 -- check service
 if not service then
-  if not service_uri then
-    ngx.log(ngx.DEBUG, "==== no valid service uri provided")
-  else
-    ngx.log(ngx.DEBUG, "==== service not set for service uri: " .. service_uri)
+  if service_host then
+    ngx.log(ngx.DEBUG, "==== no valid service for host provided: " .. service_host)
   end
+  if service_uri then
+    ngx.log(ngx.DEBUG, "==== no valid service for uri provided: " .. service_uri)
+  end
+  ngx.log(ngx.INFO, "==== no valid service found via uri or host")
   ngx.redirect('/account')
 end
 
@@ -50,6 +64,7 @@ ngx.req.read_body()
 local args = ngx.req.get_post_args()
 
 -- the account service expects 'e=user@example.com&p=password&t=3&s=servicename'
+ngx.log(ngx.DEBUG, "==== using service " .. service)
 args['service'] = service
 res = ngx.location.capture('/account', { method = ngx.HTTP_POST, body = ngx.encode_args(args) })
 
@@ -102,4 +117,5 @@ local res = ngx.location.capture('/session?id=BPSID_' .. session_id ..
 ngx.log(ngx.DEBUG, "==== PUT /session?id=BPSID_" .. session_id  ..
   '&arg_exptime=' .. sessionid.EXPTIME .. " " .. res.status)
 
+ngx.log(ngx.DEBUG, "==== redirecting to origin url " .. original_url)
 ngx.redirect(original_url)

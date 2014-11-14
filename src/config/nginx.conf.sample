@@ -10,6 +10,14 @@ http {
   error_log  logs/error.log debug;
   access_log logs/access.log;
 
+  ssl_prefer_server_ciphers on;
+  ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
+  ssl_ciphers               ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH;
+  ssl_session_cache         shared:SSL:16m;
+  ssl_session_timeout       10m;
+  ssl_certificate           ../ssl/server.crt;
+  ssl_certificate_key       ../ssl/server.key;
+
   # used to store and retrieve keys from memcached
   upstream session_store {
     server localhost:11211;
@@ -34,7 +42,6 @@ http {
   # to get a master token and a service token
   upstream account {
     server localhost:9084; # use this if you are running the mock account service
-    # server localhost:4567;
   }
 
   # Nginx Lua has no SSL support for cosockets. This is unfortunate.
@@ -42,73 +49,55 @@ http {
   # it's a little hacky and sort of dirty.
   upstream token_server {
     server localhost:9081; # Use this if you are running the mock keymaster service
-    # server localhost:3000;  # Actual keymaster service running locally
   }
 
   # Service mappings, map service urls to service names
-  init_by_lua 'service_mappings = {b="smb", c="flexd", account="checkpoint"}
+  init_by_lua 'service_mappings = {b="srsbsns", c="enterprize", account="auth"}
+               subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
                statsd_namespace = "borderpatrol"
                statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125';
 
+  # business.localhost => b
+  server {
+    listen 4443 ssl;
+    server_name business.localhost
+    root   html;
+
+    include '../session.conf';
+    include '../account.conf';
+    include '../common_locations.conf';
+
+    location ~ ^/ {
+      include '../location_defaults.conf';
+      proxy_pass http://b;
+    }
+  }
+
+  # enterprise.localhost => c
+  server {
+    listen 4443 ssl;
+    server_name enterprise.localhost
+    root   html;
+
+    include '../session.conf';
+    include '../account.conf';
+    include '../common_locations.conf';
+
+    location ~ ^/ {
+      include '../location_defaults.conf';
+      proxy_pass http://c;
+    }
+  }
+
+  # uri-resource based routing localhost/b, localhost/c, localhost/account
   server {
     listen  4443 default_server ssl;
     root   html;
 
-    ssl_prefer_server_ciphers on;
-    ssl_protocols             TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers               ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-RC4-SHA:ECDHE-RSA-AES128-SHA:AES128-GCM-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH;
-    ssl_session_cache         shared:SSL:16m;
-    ssl_session_timeout       10m;
-    ssl_certificate           ../ssl/server.crt;
-    ssl_certificate_key       ../ssl/server.key;
-
-    # GET    /session?id=foo -> memcache get
-    # POST   /session?id=foo -> memcache add, value is request body
-    # PUT    /session?id=foo -> memcache set, value is request body
-    location = /session {
-      internal;
-      set $memc_key $arg_id;
-      set $memc_exptime $arg_exptime;
-      memc_pass session_store;
-    }
-
-    # DELETE /session_delete?id=foo -> memcache delete
-    location = /session_delete {
-      internal;
-      set $memc_key $arg_id;
-      memc_pass session_store;
-    }
-
-    location = /auth {
-      internal;
-      content_by_lua_file '../../build/usr/share/borderpatrol/validate.lua';
-    }
-
-    location = /serviceauth {
-      internal;
-      content_by_lua_file '../../build/usr/share/borderpatrol/service_token.lua';
-    }
-
-    location = /authtoken {
-      internal;
-      rewrite ^/(.*) /api/auth/public/v1/account_token.json break;
-      proxy_pass http://token_server;
-      proxy_set_header   Host $host;
-    }
-
-    location = /mastertoken {
-      internal;
-      rewrite ^/(.*) /api/auth/service/v1/account_token.json break;
-      proxy_pass http://token_server;
-      proxy_set_header   Host $host;
-    }
-
-    # Serve static content from downstream account service
-    location ~ ^/account/(css|javascript|fonts|images)/ {
-      proxy_pass http://account;
-    }
+    include '../session.conf';
+    include '../common_locations.conf';
 
     location = / {
       limit_req zone=auth_zone burst=25;
@@ -120,56 +109,10 @@ http {
       }
     }
 
-    location = /logout {
-      content_by_lua_file '../../build/usr/share/borderpatrol/logout.lua';
-    }
-
-    #http://wiki.nginx.org/HttpCoreModule#location
-    location = /account/forbidden {
-      rewrite ^/(.*) / break;
-      proxy_set_header Host $http_host;
-      proxy_pass http://$1;
-    }
-
     location ~ ^/(b|c|account) {
-      set $original_uri $uri;
-      set $via "1.1  $host (Borderpatrol)";
-      if ($http_via) {
-        set $via "$http_via, 1.1 $host (Borderpatrol)";
-      }
-      proxy_set_header Via $via;
+      include '../location_defaults.conf';
       rewrite ^/(.*) / break;
-      set $auth_token $http_auth_token;
-      access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
-      proxy_set_header Auth-token $auth_token;
-      proxy_set_header Host $http_host;
-      proxy_set_header X-Forwarded-Proto $scheme;
       proxy_pass http://$1;
-      proxy_intercept_errors on;
-      error_page 401  = @redirect;
-      error_page 403 = @forbidden;
-    }
-
-    location @forbidden {
-      # This can be a redirect, a custom 403 page or a simple status
-      return 302 $scheme://$host:$server_port/account/forbidden;
-    }
-
-    location @redirect {
-      # For Ajax requests, we want to return a 401 with a descriptive message
-      if ($http_x_requested_with = "XMLHttpRequest") {
-        more_set_headers 'Content-Type: application/json';
-        return 401 '{"CODE": "SESSION_EXPIRED"}';
-      }
-      content_by_lua_file '../../build/usr/share/borderpatrol/redirect.lua';
-    }
-
-    location = /health {
-      content_by_lua_file '../../build/usr/share/borderpatrol/health_check.lua';
-    }
-
-    location /robots.txt {
-      alias ../../build/usr/share/borderpatrol/robots.txt;
     }
 
     # This should be the last location directive, designed to capture any
