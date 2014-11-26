@@ -78,7 +78,6 @@ The token that has the key of `master_token` is the Master Token, and can be
 used to make a call to the Auth Service to get other service tokens.  Service
 Tokens have a key name that corresponds to the name of the downstream service.
 
-
 ## Developing/Contributing
 
 ### IRC
@@ -88,6 +87,8 @@ Join `#borderpatrol` on the [Freenode](https://freenode.net)
 ### Installation
 
 #### Darwin
+
+Ensure you are using lua51, since the Lua Nginx support is 5.1 only.
 
 * Get [homebrew](http://brew.sh/)
 * brew install luarocks
@@ -106,13 +107,14 @@ Join `#borderpatrol` on the [Freenode](https://freenode.net)
 You'll need the Test::Nginx CPAN module.
 
 * cpan install Test::Nginx
+* cpan install Test::Nginx::Socket
 * make test
 
 ### Running full mock services locally
 
 * bundle install
 * make mocktest
-* In a browser, hit [localhost:4443/b/](https://localhost:4443/b/)
+* In a browser, hit [localhost:4443/b/](https://localhost:4443/b/) or [business.localhost:4443](https://business.localhost:4443/)
 
 ### Additional Notes
 
@@ -124,7 +126,19 @@ You'll need the Test::Nginx CPAN module.
  * `9083` Mock downstream service B
  * `9084` Mock Account Service
 
-Once you stop Mocktest, manually kill the processes above (i.e)
+#### Subdomain routing
+
+To test and work with subdomain routing locally, ensure to update your `/etc/hosts` file to include subdomains to localhost.
+For example:
+
+```
+127.0.0.1 business.localhost
+127.0.0.1 enterprise.localhost
+```
+
+#### Troublshooting
+
+Once you stop Mocktest, sometimes you must manually kill the processes above (i.e)
 
 pkill -9 -f nginx
 pkill -9 -f god

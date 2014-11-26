@@ -1,6 +1,6 @@
 # Debian package name & version
 MAJOR_VER=0
-MINOR_VER=1
+MINOR_VER=2
 PATCH_VER=0
 PKG_NAME=borderpatrol
 BUILD_VER=0${BUILD_NUMBER}-dev
@@ -62,6 +62,7 @@ build: submodules compile mkdirs $(BUILD_PATH)/.install_rocks
 	@cp -rp ${PWD}/src/*.lua ${BUILD_PATH}${SHARE_DIR}
 	@cp ${PWD}/src/robots.txt ${BUILD_PATH}${SHARE_DIR}
 	@cp ${PWD}/src/config/nginx.conf.sample ${BUILD_PATH}${CONF_DIR}/sites-available/${PKG_NAME}.conf.sample
+	@cp ${PWD}/src/config/*.conf ${BUILD_PATH}${CONF_DIR}/
 	@cp ${PWD}/src/ssl/server.crt ${BUILD_PATH}${CONF_DIR}/ssl/server.crt
 	@cp ${PWD}/src/ssl/server.key ${BUILD_PATH}${CONF_DIR}/ssl/server.key
 

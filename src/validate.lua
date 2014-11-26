@@ -35,15 +35,29 @@ if res.status == ngx.HTTP_OK then
   if all_tokens then
     -- get service name from uri
     local service_uri = string.match(ngx.var.request_uri,"^/([^/]+)")
+    local service_host = string.match(ngx.req.get_headers()["Host"], "^([^.]+)")
     local service = nil
-    if service_uri then
+
+    if service_host then
+      ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
+      service = subdomain_mappings[service_host]
+    end
+
+    if service_uri and not service then
+      ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
       service = service_mappings[service_uri]
+    end
+
+    if not service then
+      ngx.log(ngx.WARN, "==== no service found from host or uri ")
     end
 
     auth_token = all_tokens['service_tokens'][service]
 
     if not auth_token then
-      ngx.log(ngx.INFO, "==== token not found in session for service : " .. service_uri)
+      if service then
+        ngx.log(ngx.INFO, "==== token not found in session for service : " .. service)
+      end
       master_token = all_tokens['auth_service']
       if master_token then
         local params = {}

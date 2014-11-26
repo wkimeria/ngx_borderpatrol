@@ -7,6 +7,8 @@ repeat_each(1);
 
 plan tests => repeat_each() * (2 * blocks()) - 1;
 
+no_root_location;
+
 run_tests();
 
 __DATA__
@@ -17,7 +19,8 @@ __DATA__
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {auth="smb", s="flexd"}';
+init_by_lua 'service_mappings = {auth="srsbsns", s="enterprize"}
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
 --- config
 location /memc_setup {
     internal;
@@ -31,7 +34,7 @@ location = /setup {
     echo_subrequest GET '/memc_setup?cmd=flush_all';
     echo_subrequest POST '/memc_setup?key=BP_LEASE' -b '1';
     echo_subrequest POST '/memc_setup?key=BPS1' -b 'mysecret:1595116800';
-    echo_subrequest POST '/memc_setup?key=BPSID_MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHrIp/gMg*' -b '{"auth_service": "aaa","service_tokens": {"smb": "bbb"}}';
+    echo_subrequest POST '/memc_setup?key=BPSID_MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHrIp/gMg*' -b '{"auth_service": "aaa","service_tokens": {"srsbsns": "bbb"}}';
 }
 location = /session {
     internal;
@@ -51,6 +54,7 @@ location /auth { # under test
 --- request
 GET /auth
 --- more_headers
+Content-type: application/x-www-form-urlencoded
 Cookie: border_session=MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHrIp/gMg*
 --- response_body_like
 OK\r
@@ -159,3 +163,50 @@ OK\r
 STORED\r
 STORED\r
 .*401 Authorization Required.*
+
+=== TEST 5: test valid sessionid and valid auth token for subdomain
+--- http_config
+lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
+lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
+init_by_lua 'service_mappings = {auth="srsbsns", s="enterprize"}
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+--- config
+location /memc_setup {
+    internal;
+    set $memc_cmd $arg_cmd;
+    set $memc_key $arg_key;
+
+    memc_pass 127.0.0.1:$TEST_NGINX_MEMCACHED_PORT;
+}
+location = /setup {
+    # clear
+    echo_subrequest GET '/memc_setup?cmd=flush_all';
+    echo_subrequest POST '/memc_setup?key=BP_LEASE' -b '1';
+    echo_subrequest POST '/memc_setup?key=BPS1' -b 'mysecret:1595116800';
+    echo_subrequest POST '/memc_setup?key=BPSID_MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHrIp/gMg*' -b '{"auth_service": "aaa","service_tokens": {"srsbsns": "bbb"}}';
+}
+location = /session {
+    internal;
+    set $memc_key $arg_id;
+    memc_pass 127.0.0.1:$TEST_NGINX_MEMCACHED_PORT;
+}
+
+location = /validate {
+    content_by_lua_file '../../build/usr/share/borderpatrol/validate.lua';
+}
+
+location / { # under test
+    echo_location /setup;
+    echo_location /validate;
+    echo $echo_response_status;
+}
+--- request
+GET http://business.localhost
+--- more_headers
+Cookie: border_session==MDEyMzQ1Njc4OTAxMjM0NQ**:1595116800:9Wc0CzZKO7Mq5Y2NbTaHrIp/gMg*
+--- response_body_like
+OK\r
+STORED\r
+STORED\r
+STORED\r
+.*401.*
