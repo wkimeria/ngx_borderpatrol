@@ -34,18 +34,27 @@ local service_uri = string.match(original_url, "^/([^/]+)")
 local service_host = string.match(original_host, "^([^.]+)")
 local service = nil
 
-if service_host then
+-- catch calls to /account service from subdomain based routes
+if service_uri and service_mappings[service_uri] == "auth" then
+  ngx.log(ngx.DEBUG, "==== trying to access account service")
+  service = service_mappings[service_uri]
+end
+
+-- check for subdomain based routes first
+if not service and service_host then
   ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
   service = subdomain_mappings[service_host]
 else
   ngx.log(ngx.DEBUG, "==== no service host, trying service uri")
 end
 
-if service_uri and not service then
-  ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
+-- check for uri-resource based routes last
+if not service and service_uri then
   service = service_mappings[service_uri]
+  ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
 else
   ngx.log(ngx.DEBUG, "==== no service uri")
+  ngx.log(ngx.DEBUG, "==== original_url" .. original_url)
 end
 
 -- check service

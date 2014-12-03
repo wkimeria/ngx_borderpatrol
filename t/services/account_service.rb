@@ -40,7 +40,7 @@ get '/settings' do
   token = request.env['HTTP_AUTH_TOKEN']
   $stderr.write "accountservice #{request.url} token = #{token}\n"
 
-  if token != 'LIVEKALECHECKPOINT'
+  if token != 'LIVEKALEAUTH'
     halt 401, 'Ooops, request not authenticated. Did you login?'
   else
     haml :settings, :content_type => 'text/html'

@@ -38,12 +38,18 @@ if res.status == ngx.HTTP_OK then
     local service_host = string.match(ngx.req.get_headers()["Host"], "^([^.]+)")
     local service = nil
 
-    if service_host then
+    -- catch calls to /account service from subdomain based routes
+    if service_uri and service_mappings[service_uri] == "auth" then
+      ngx.log(ngx.DEBUG, "==== trying to access account service")
+      service = service_mappings[service_uri]
+    end
+
+    if not service and service_host then
       ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
       service = subdomain_mappings[service_host]
     end
 
-    if service_uri and not service then
+    if not service and service_uri then
       ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
       service = service_mappings[service_uri]
     end
