@@ -16,7 +16,7 @@ if res.status == ngx.HTTP_CREATED then
   -- set the cookie with the session_id
   ngx.header['Set-Cookie'] = 'border_session=' .. session_id .. '; path=/; HttpOnly; Secure;'
   -- Redirect to account service login
-  ngx.redirect('/account')
+  ngx.redirect(account_resource)
 else
   ngx.log(ngx.ERR, "==== an error occurred trying to save session: " .. res.status)
   ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)

@@ -16,7 +16,8 @@ __DATA__
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="smb", s="flexd"}';
+init_by_lua 'service_mappings = {b="smb", s="flexd"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -47,7 +48,8 @@ STORED\r
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="smb", s="flexd"}';
+init_by_lua 'service_mappings = {b="smb", s="flexd"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -80,7 +82,8 @@ Location: http://localhost(?::\d+)?/account$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="smb", s="flexd"}';
+init_by_lua 'service_mappings = {b="smb", s="flexd"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;

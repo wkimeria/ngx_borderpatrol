@@ -54,7 +54,8 @@ Auth-Token: tokentokentoken.+everything is ok$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="smb",s="flexd"}';
+init_by_lua 'service_mappings = {b="smb",s="flexd"}
+             account_resource = "/account"';
 upstream b {
   server 127.0.0.1:$TEST_NGINX_SERVER_PORT; # self
 }
