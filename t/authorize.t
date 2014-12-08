@@ -17,7 +17,8 @@ __DATA__
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -49,7 +50,8 @@ STORED\r
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -98,7 +100,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -146,7 +149,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -186,7 +190,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -234,7 +239,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -282,7 +288,8 @@ Location: http://localhost(?::\d+)?/b$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;
@@ -331,7 +338,8 @@ Location: http://business.localhost(?::\d+)?$
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
 init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
-             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
+             subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+             account_resource = "/account"';
 --- config
 location /memc_setup {
     internal;

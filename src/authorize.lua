@@ -34,7 +34,7 @@ local service_uri = string.match(original_url, "^/([^/]+)")
 local service_host = string.match(original_host, "^([^.]+)")
 local service = nil
 
--- catch calls to /account service from subdomain based routes
+-- catch calls to the account service resource from subdomain based routes
 if service_uri and service_mappings[service_uri] == "auth" then
   ngx.log(ngx.DEBUG, "==== trying to access account service")
   service = service_mappings[service_uri]
@@ -66,7 +66,7 @@ if not service then
     ngx.log(ngx.DEBUG, "==== no valid service for uri provided: " .. service_uri)
   end
   ngx.log(ngx.INFO, "==== no valid service found via uri or host")
-  ngx.redirect('/account')
+  ngx.redirect(account_resource)
 end
 
 ngx.req.read_body()
@@ -75,9 +75,9 @@ local args = ngx.req.get_post_args()
 -- the account service expects 'e=user@example.com&p=password&t=3&s=servicename'
 ngx.log(ngx.DEBUG, "==== using service " .. service)
 args['service'] = service
-res = ngx.location.capture('/account', { method = ngx.HTTP_POST, body = ngx.encode_args(args) })
+res = ngx.location.capture(account_resource, { method = ngx.HTTP_POST, body = ngx.encode_args(args) })
 
-ngx.log(ngx.DEBUG, "==== POST /account " .. res.status .. " " .. res.body)
+ngx.log(ngx.DEBUG, "==== POST " .. account_resource .. " " .. res.status .. " " .. res.body)
 
 -- assume any 2xx is success
 -- On failure, redirect to login
@@ -103,15 +103,15 @@ local all_tokens = json.decode(all_tokens_json)
 -- looking for auth tokens
 if not all_tokens then
   statistics.log('login.failure')
-  ngx.log(ngx.DEBUG, "==== no tokens found, redirecting to /account")
-  ngx.redirect('/account')
+  ngx.log(ngx.DEBUG, "==== no tokens found, redirecting to " .. account_resource)
+  ngx.redirect(account_resource)
 end
 
 -- looking for service token
 if not all_tokens["service_tokens"][service] then
   statistics.log('login.failure')
-  ngx.log(ngx.DEBUG, "==== parse failure, or service token not found, redirecting to /account")
-  ngx.redirect('/account')
+  ngx.log(ngx.DEBUG, "==== parse failure, or service token not found, redirecting to " .. account_resource)
+  ngx.redirect(account_resource)
 end
 
 statistics.log('login.success')

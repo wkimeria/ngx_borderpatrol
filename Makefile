@@ -1,7 +1,7 @@
 # Debian package name & version
 MAJOR_VER=0
 MINOR_VER=2
-PATCH_VER=1
+PATCH_VER=2
 PKG_NAME=borderpatrol
 BUILD_VER=0${BUILD_NUMBER}-dev
 

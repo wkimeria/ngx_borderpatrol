@@ -54,6 +54,7 @@ http {
   # Service mappings, map service urls to service names
   init_by_lua 'service_mappings = {b="srsbsns", c="enterprize", account="auth"}
                subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
+               account_resource = "/account"
                statsd_namespace = "borderpatrol"
                statsd_prefix = "staging"
                statsd_host = "localhost"
