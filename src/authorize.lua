@@ -54,7 +54,7 @@ if not service and service_uri then
   ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
 else
   ngx.log(ngx.DEBUG, "==== no service uri")
-  ngx.log(ngx.DEBUG, "==== original_url" .. original_url)
+  ngx.log(ngx.DEBUG, "==== original_url " .. original_url)
 end
 
 -- check service
