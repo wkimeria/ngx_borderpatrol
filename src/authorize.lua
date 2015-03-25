@@ -35,7 +35,7 @@ local service_host = string.match(original_host, "^([^.]+)")
 local service = nil
 
 -- catch calls to the account service resource from subdomain based routes
-if service_uri and service_mappings[service_uri] == service_mappings["account"] then
+if service_uri and (("/" .. service_uri) == account_resource) then
   ngx.log(ngx.DEBUG, "==== trying to access account service")
   service = service_mappings[service_uri]
 end
