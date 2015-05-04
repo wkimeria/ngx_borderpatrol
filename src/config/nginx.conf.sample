@@ -52,7 +52,7 @@ http {
   }
 
   # Service mappings, map service urls to service names
-  init_by_lua 'service_mappings = {b="srsbsns", c="enterprize", account="auth"}
+  init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/c"]="enterprize", ["/account"]="auth"}
                subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
                account_resource = "/account"
                statsd_namespace = "borderpatrol"
@@ -69,6 +69,7 @@ http {
     include '../session.conf';
     include '../account.conf';
     include '../common_locations.conf';
+    include '../service_locations.conf';
 
     location ~ ^/ {
       include '../location_defaults.conf';
@@ -85,6 +86,7 @@ http {
     include '../session.conf';
     include '../account.conf';
     include '../common_locations.conf';
+    include '../service_locations.conf';
 
     location ~ ^/ {
       include '../location_defaults.conf';
@@ -99,6 +101,7 @@ http {
 
     include '../session.conf';
     include '../common_locations.conf';
+    include '../service_locations.conf';
 
     location = / {
       limit_req zone=auth_zone burst=25;
@@ -108,12 +111,6 @@ http {
       if ($request_method = GET ) {
         return 301 $scheme://$host:$server_port/account/settings;
       }
-    }
-
-    location ~ ^/(b|c|account) {
-      include '../location_defaults.conf';
-      rewrite ^/(.*) / break;
-      proxy_pass http://$1;
     }
 
     # This should be the last location directive, designed to capture any
