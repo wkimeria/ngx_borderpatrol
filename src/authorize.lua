@@ -1,5 +1,6 @@
 local json = require("json")
 local sessionid = require("sessionid")
+local service_matcher = require("service")
 
 -------------------------------------------
 --  Make the call to the Account Service
@@ -29,44 +30,14 @@ ngx.log(ngx.DEBUG, "==== GET /session?id=BP_URL_SID_" .. session_id .. " " .. re
 original_url = res.body
 original_host = ngx.req.get_headers()["Host"]
 
--- get service name from first part of original uri
-local service_uri = string.match(original_url, "^/([^/]+)")
-local service_host = string.match(original_host, "^([^.]+)")
-local service = nil
+-- get potential service names
+local service = service_matcher.find_service(original_url, original_host)
 
--- catch calls to the account service resource from subdomain based routes
-if service_uri and (("/" .. service_uri) == account_resource) then
-  ngx.log(ngx.DEBUG, "==== trying to access account service")
-  service = service_mappings[service_uri]
-end
-
--- check for subdomain based routes first
-if not service and service_host then
-  ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
-  service = subdomain_mappings[service_host]
-else
-  ngx.log(ngx.DEBUG, "==== no service host, trying service uri")
-end
-
--- check for uri-resource based routes last
-if not service and service_uri then
-  service = service_mappings[service_uri]
-  ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
-else
-  ngx.log(ngx.DEBUG, "==== no service uri")
-  ngx.log(ngx.DEBUG, "==== original_url " .. original_url)
-end
-
--- check service
+-- if no service exists, then hit the account_resource
 if not service then
-  if service_host then
-    ngx.log(ngx.DEBUG, "==== no valid service for host provided: " .. service_host)
-  end
-  if service_uri then
-    ngx.log(ngx.DEBUG, "==== no valid service for uri provided: " .. service_uri)
-  end
-  ngx.log(ngx.INFO, "==== no valid service found via uri or host")
   ngx.redirect(account_resource)
+else
+  ngx.log(ngx.DEBUG, "==== service found: " .. service)
 end
 
 ngx.req.read_body()

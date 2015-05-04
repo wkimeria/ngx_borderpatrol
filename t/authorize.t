@@ -16,7 +16,7 @@ __DATA__
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -49,7 +49,7 @@ STORED\r
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -99,7 +99,7 @@ Location: http://localhost(?::\d+)?/b$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -148,7 +148,7 @@ Location: http://localhost(?::\d+)?/b$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -189,7 +189,7 @@ Location: http://localhost(?::\d+)?/b$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -238,7 +238,7 @@ Location: http://localhost(?::\d+)?/b$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -287,7 +287,7 @@ Location: http://localhost(?::\d+)?/b$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config
@@ -337,7 +337,7 @@ Location: http://business.localhost(?::\d+)?$
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {b="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/b"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}
              account_resource = "/account"';
 --- config

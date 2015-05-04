@@ -19,7 +19,7 @@ __DATA__
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {auth="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/auth"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
 --- config
 location /memc_setup {
@@ -168,7 +168,7 @@ STORED\r
 --- http_config
 lua_package_path "./build/usr/share/borderpatrol/?.lua;./build/usr/share/lua/5.1/?.lua;;";
 lua_package_cpath "./build/usr/lib/lua/5.1/?.so;;";
-init_by_lua 'service_mappings = {auth="srsbsns", s="enterprize"}
+init_by_lua 'service_mappings = {["/auth"]="srsbsns", ["/s"]="enterprize"}
              subdomain_mappings = {business="srsbsns", enterprise="enterprize"}';
 --- config
 location /memc_setup {

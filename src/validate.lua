@@ -1,5 +1,6 @@
 local json = require("json")
 local sessionid = require("sessionid")
+local service_matcher = require("service")
 
 -------------------------------------------
 -- Lookup auth token by session id
@@ -33,30 +34,9 @@ if res.status == ngx.HTTP_OK then
   all_tokens = json.decode(all_tokens_json, {nothrow = true})
 
   if all_tokens then
+    local service = service_matcher.find_service(ngx.var.request_uri, ngx.req.get_headers()["Host"])
     -- get service name from uri
-    local service_uri = string.match(ngx.var.request_uri,"^/([^/]+)")
-    local service_host = string.match(ngx.req.get_headers()["Host"], "^([^.]+)")
-    local service = nil
-
-    -- catch calls to account service resource from subdomain based routes
-    if service_uri and (("/" .. service_uri) == account_resource) then
-      ngx.log(ngx.DEBUG, "==== trying to access account service")
-      service = service_mappings[service_uri]
-    end
-
-    if not service and service_host then
-      ngx.log(ngx.DEBUG, "==== service host is: " .. service_host)
-      service = subdomain_mappings[service_host]
-    end
-
-    if not service and service_uri then
-      ngx.log(ngx.DEBUG, "==== service uri is: " .. service_uri)
-      service = service_mappings[service_uri]
-    end
-
-    if not service then
-      ngx.log(ngx.WARN, "==== no service found from host or uri ")
-    end
+    if service then ngx.log(ngx.DEBUG, "==== service found: " .. service) end
 
     auth_token = all_tokens['service_tokens'][service]
 
