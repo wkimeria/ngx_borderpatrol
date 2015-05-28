@@ -90,12 +90,19 @@ statistics.log('login.success')
 -- Extract token for specific service
 local auth_token = all_tokens["service_tokens"][service]
 
+-- Create a new session id after login to twart session fixation attacks
+local new_session_id = sessionid.generate();
+
 -- store all tokens in memcache via internal subrequest
-local res = ngx.location.capture('/session?id=BPSID_' .. session_id ..
+local res = ngx.location.capture('/session?id=BPSID_' .. new_session_id ..
   '&arg_exptime=' .. sessionid.EXPTIME, { body = all_tokens_json, method = ngx.HTTP_PUT })
 
-ngx.log(ngx.DEBUG, "==== PUT /session?id=BPSID_" .. session_id  ..
+ngx.log(ngx.DEBUG, "==== PUT /session?id=BPSID_" .. new_session_id  ..
   '&arg_exptime=' .. sessionid.EXPTIME .. " " .. res.status)
+
+-- Ensure we set a new cookie with the new session id
+ngx.log(ngx.DEBUG, "==== setting new cookie session_id " .. new_session_id)
+ngx.header['Set-Cookie'] = 'border_session=' .. new_session_id .. '; path=/; HttpOnly; Secure;'
 
 ngx.log(ngx.DEBUG, "==== redirecting to origin url " .. original_url)
 ngx.redirect(original_url)
