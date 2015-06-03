@@ -59,7 +59,7 @@ http {
                statsd_prefix = "staging"
                statsd_host = "localhost"
                statsd_port = 8125
-               bp_version = "0.3.1"';
+               bp_version = "0.3.2"';
 
   # business.localhost => b
   server {
