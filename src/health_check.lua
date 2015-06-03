@@ -3,6 +3,7 @@
 -- BorderPatrol. The only check, currently, is that memcache is reachable.
 --
 local health_check = {}
+math.randomseed(os.time())
 
 -- print out the actual HTML
 function health_check.output(errors)
@@ -36,22 +37,24 @@ end
 
 local function get_errors()
   local errors = {}
-  local res = ngx.location.capture('/session?id=health_check', { method = ngx.HTTP_POST, body = os.time() })
+  local param = "health_check" .. math.random()
+
+  local res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_POST, body = os.time() })
   if not (res.status == ngx.HTTP_CREATED) then
     errors[#errors+1] = "memcache add: " .. res.status .. ": " .. res.body
   end
 
-  res = ngx.location.capture('/session?id=health_check')
+  res = ngx.location.capture('/session?id=' .. param)
   if not (res.status == ngx.HTTP_OK) then
     errors[#errors+1] = "memcache get: " .. res.status .. ": " .. res.body
   end
 
-  res = ngx.location.capture('/session?id=health_check', { method = ngx.HTTP_PUT, body = os.time() })
+  res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_PUT, body = os.time() })
   if not (res.status == ngx.HTTP_CREATED) then
     errors[#errors+1] = "memcache set: " .. res.status .. ": " .. res.body
   end
 
-  res = ngx.location.capture('/session?id=health_check', { method = ngx.HTTP_DELETE })
+  res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_DELETE })
   if not (res.status == ngx.HTTP_OK) then
     errors[#errors+1] = "memcache delete: " .. res.status .. ": " .. res.body
   end
