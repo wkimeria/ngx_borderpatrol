@@ -1,76 +1,63 @@
+local json = require("json")
 --
 -- This script serves up an HTML page that displays current health of the
 -- BorderPatrol. The only check, currently, is that memcache is reachable.
 --
-local health_check = {}
-math.randomseed(os.time())
 
--- print out the actual HTML
-function health_check.output(errors)
-  local output = [[
-  <html>
-    <head>
-      <title>Border Patrol Health</title>
-    </head>
-    <body>
-  ]]
+-- take local_health and SET-OR it with upstream_health
+local function merge_tables(upstream_health, local_health)
+  for upstream, health in pairs(upstream_health) do
+    local_health[upstream] = health
+  end
 
-  output = output .. "<h3>Version " .. bp_version .. "</h3>"
+  return local_health
+end
 
-  if #errors > 0 then
-    output = output .. "<h3>Errors</h3><ul>"
-    for i, v in ipairs(errors) do
-      output = output .. "<li>" .. v .. "</li>"
+-- return a table {borderpatrol = {... "version", "stats" and "error"} }
+local function get_local_health()
+  local tbl = {}
+  tbl["stats"] = {}
+  tbl["version"] = bp_version
+
+  local res = ngx.location.capture('/session/health?cmd=stats')
+  if not (res.status == ngx.HTTP_OK) then
+    tbl["error"] = true
+  end
+  tbl["status"] = res.status
+  tbl["stats"]["memcached"] = {status=res.status, body=res.body}
+
+  return {borderpatrol=tbl}
+end
+
+-- returns a table, e.g. {account={status=200, body={}}}
+local function get_upstreams_health()
+  local tbl = {}
+
+  for k, v in pairs(health_checks) do
+    local res = ngx.location.capture(v)
+    tbl[k] = {status=res.status, body=json.decode(res.body)}
+  end
+
+  return tbl
+end
+
+-- checks if there are any error conditions
+local function has_error(healths)
+  for k,v in pairs(healths) do
+    if not (v["status"] == ngx.HTTP_OK) then
+      return true
     end
-    output = output .. "</ul>"
-  else
-    output = output .. "Everything is ok."
   end
-
-  output = output .. [[
-    </body>
-  </html>
-  ]]
-
-  return output
+  return false
 end
 
-local function get_errors()
-  local errors = {}
-  local param = "health_check" .. math.random()
+local healths = merge_tables(get_local_health(), get_upstreams_health())
 
-  local res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_POST, body = os.time() })
-  if not (res.status == ngx.HTTP_CREATED) then
-    errors[#errors+1] = "memcache add: " .. res.status .. ": " .. res.body
-  end
-
-  res = ngx.location.capture('/session?id=' .. param)
-  if not (res.status == ngx.HTTP_OK) then
-    errors[#errors+1] = "memcache get: " .. res.status .. ": " .. res.body
-  end
-
-  res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_PUT, body = os.time() })
-  if not (res.status == ngx.HTTP_CREATED) then
-    errors[#errors+1] = "memcache set: " .. res.status .. ": " .. res.body
-  end
-
-  res = ngx.location.capture('/session?id=' .. param, { method = ngx.HTTP_DELETE })
-  if not (res.status == ngx.HTTP_OK) then
-    errors[#errors+1] = "memcache delete: " .. res.status .. ": " .. res.body
-  end
-
-  return errors
-end
-
-
-local errors = get_errors()
-local output = health_check.output(errors)
-
-if (#errors > 0) then
+if (has_error(healths)) then
   ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
 else
   ngx.status = ngx.HTTP_OK
 end
 
-ngx.header.content_type = 'text/html'
-ngx.print(output)
+ngx.header.content_type = 'application/json'
+ngx.print(json.encode(healths))
