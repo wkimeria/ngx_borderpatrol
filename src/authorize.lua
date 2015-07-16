@@ -104,5 +104,11 @@ ngx.log(ngx.DEBUG, "==== PUT /session?id=BPSID_" .. new_session_id  ..
 ngx.log(ngx.DEBUG, "==== setting new cookie session_id " .. new_session_id)
 ngx.header['Set-Cookie'] = 'border_session=' .. new_session_id .. '; path=/; HttpOnly; Secure;'
 
+-- If no original url use default url for service
+if not original_url or original_url == "" then
+  original_url = service_matcher.default_url_for_service(service)
+  ngx.log(ngx.DEBUG, "==== blank original url, setting to default of " .. original_url)
+end
+
 ngx.log(ngx.DEBUG, "==== redirecting to origin url " .. original_url)
 ngx.redirect(original_url)
