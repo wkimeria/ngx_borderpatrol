@@ -53,12 +53,20 @@ if res.status == ngx.HTTP_OK then
 
         -- TODO Check response status (in this case, don't do anything, treat it as missing token)
         local specific_token_json = res.body
-        auth_token = json.decode(specific_token_json, {nothrow = true})['service_tokens'][service]
+        service_tokens = json.decode(specific_token_json, {nothrow = true})
+        auth_token = nil
+
+        if service_tokens then
+          auth_token = service_tokens['service_tokens'][service]
+        else
+          ngx.log(ngx.WARN, "==== unable to parse response from auth service " .. specific_token_json)
+        end
+
         if auth_token then
           all_tokens['service_tokens'][service] = auth_token
           all_tokens_json = json.encode(all_tokens)
+          ngx.log(ngx.INFO, "==== retrieved service token for service: " .. service .. " " .. auth_token)
         end
-        ngx.log(ngx.INFO, "==== retrieved service token for service: " .. service .. " " .. auth_token)
       end
     end
     -- reset the auth_token TTL to maintain a rolling session window
