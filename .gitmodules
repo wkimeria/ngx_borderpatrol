@@ -1,6 +1,6 @@
 [submodule "contrib/nginx"]
 	path = contrib/nginx
-	url = https://github.com/nginx/nginx.git
+	url = https://github.com/nginx/nginx-releases.git
 [submodule "contrib/ngx_devel_kit"]
 	path = contrib/ngx_devel_kit
 	url = https://github.com/simpl/ngx_devel_kit.git
