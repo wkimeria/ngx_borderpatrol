@@ -61,6 +61,18 @@ local function find_service(path, host)
   return service
 end
 
+-- Get default url for given service. If none, return "/"
+local function default_url_for_service(service)
+  default_url = "/"
+  for key,value in pairs(service_mappings) do
+    if value == service then
+      default_url = key
+    end
+  end
+  return default_url
+end
+
+module.default_url_for_service = default_url_for_service
 module.find_service = find_service
 module.match_path = match_path
 module.match_host = match_host
