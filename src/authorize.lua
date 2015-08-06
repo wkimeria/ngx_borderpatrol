@@ -1,6 +1,7 @@
 local json = require("json")
 local sessionid = require("sessionid")
 local service_matcher = require("service")
+local cookie = require("cookie")
 
 -------------------------------------------
 --  Make the call to the Account Service
@@ -100,9 +101,9 @@ local res = ngx.location.capture('/session?id=BPSID_' .. new_session_id ..
 ngx.log(ngx.DEBUG, "==== PUT /session?id=BPSID_" .. new_session_id  ..
   '&arg_exptime=' .. sessionid.EXPTIME .. " " .. res.status)
 
--- Ensure we set a new cookie with the new session id
-ngx.log(ngx.DEBUG, "==== setting new cookie session_id " .. new_session_id)
-ngx.header['Set-Cookie'] = 'border_session=' .. new_session_id .. '; path=/; HttpOnly; Secure;'
+-- Ensure we set a new cookie with the new session id, and the csrf cookie
+ngx.log(ngx.DEBUG, "==== setting new session cookie: " .. new_session_id)
+cookie.set_all(new_session_id)
 
 -- If no original url use default url for service
 if not original_url or original_url == "" then

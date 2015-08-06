@@ -87,5 +87,6 @@ end
 
 -- If we made it this far, we're good. Inject the Auth-Token header
 ngx.header['Auth-Token'] = auth_token
+
 ngx.log(ngx.INFO, "==== request auth header set")
 ngx.exit(ngx.HTTP_OK)

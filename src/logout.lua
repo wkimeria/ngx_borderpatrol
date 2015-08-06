@@ -1,3 +1,4 @@
+local cookie = require("cookie")
 -------------------------------------------
 -- delete auth token by session id
 -------------------------------------------
@@ -25,13 +26,10 @@ if session_id then
     { method = ngx.HTTP_DELETE })
 
   ngx.log(ngx.DEBUG, "DELETE /session_delete?id=BP_URL_SID_" .. session_id .. " " .. res.status)
-
-  -- unset session cookie (expires now() - 1yr)
-  ngx.header['Set-Cookie'] = 'border_session=' ..
-    '; path=/; expires=' .. ngx.cookie_time(ngx.time() - 3600 * 24 * 360)
-
 else
-    ngx.log(ngx.INFO, "==== session_id not set")
+  ngx.log(ngx.INFO, "==== session_id not set")
 end
 
+-- unset all border* cookies (expires now() - 1yr)
+cookie.expire_all()
 ngx.redirect(destination)

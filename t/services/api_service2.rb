@@ -2,6 +2,7 @@ require 'sinatra'
 
 ["/", "/first/second"].each do |path|
   get path do
+    $stderr.write "apiserver2 csrf: #{request.env['HTTP_X_BORDER_CSRF_VERIFIED']}"
     token = request.env['HTTP_AUTH_TOKEN']
     $stderr.write "apiserver2 #{request.url} token = #{token}\n"
 
