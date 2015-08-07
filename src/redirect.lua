@@ -1,4 +1,5 @@
 local sessionid = require("sessionid")
+local cookie = require("cookie")
 
 local original_url = ngx.var.original_uri
 
@@ -14,7 +15,7 @@ ngx.log(ngx.DEBUG, "==== POST /session?id=BP_URL_SID_" .. session_id  ..
 
 if res.status == ngx.HTTP_CREATED then
   -- set the cookie with the session_id
-  ngx.header['Set-Cookie'] = 'border_session=' .. session_id .. '; path=/; HttpOnly; Secure;'
+  cookie.set_session(session_id)
   -- Redirect to account service login
   ngx.redirect(account_resource)
 else

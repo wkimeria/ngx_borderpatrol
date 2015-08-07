@@ -229,11 +229,13 @@ local function is_valid(session_id)
 
   -- check for the obvious
   if not data or not signature or not ts then
+    ngx.log(ngx.DEBUG, "=== missing data or sig or ts")
     return false
   end
 
   -- check whether the cookie expired already
   if ngx.time() > ts + SESSION_COOKIE_LIFETIME then
+    ngx.log(ngx.DEBUG, "=== expired")
     return false
   end
 
@@ -243,6 +245,7 @@ local function is_valid(session_id)
 
   -- check whether data or signature became nil (happens in case it couldn't be decoded properly)
   if not data or #data ~= DATA_LENGTH or not signature or #signature ~= HMAC_SHA1_SIGN_LENGTH then
+    ngx.log(ngx.DEBUG, "=== data or sig became nil")
     return false
   end
 
