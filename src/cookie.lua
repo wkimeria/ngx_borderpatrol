@@ -7,9 +7,18 @@ local csrf_cookie_name = 'border_csrf'
 
 --
 -- Creates the cookie from the name and value parameters
+-- name The cookie name
+-- value The value of the cookie
+-- notHttp Will append 'HttpOnly' if set to anything but true
 --
-local function make_cookie(name, value)
-  return (name .. '=' .. value .. '; path=/; HttpOnly; Secure;')
+local function make_cookie(name, value, notHttp)
+  cookie = name .. '=' .. value .. '; path=/; Secure;'
+
+  if (notHttp == true) then
+    return cookie
+  else
+    return (cookie .. ' HttpOnly;')
+  end
 end
 
 --
@@ -21,17 +30,19 @@ end
 
 --
 -- Returns the cookie for sessions
+-- This must be HttpOnly so that javascript cannot read the value
 -- session_id The id for the session cookie
 --
 local function gen_session(session_id)
-  return make_cookie(session_cookie_name, session_id)
+  return make_cookie(session_cookie_name, session_id, false)
 end
 
 --
 -- Creates the cookie for csrf protection, generating a unique id for it
+-- This must be non-HttpOnly so that javascript can read the value
 --
 local function gen_csrf()
-  return make_cookie(csrf_cookie_name, sessionid.generate())
+  return make_cookie(csrf_cookie_name, sessionid.generate(), true)
 end
 
 --
