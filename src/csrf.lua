@@ -81,4 +81,6 @@ local function set_csrf_verified()
 
 end
 
-set_csrf_verified()
+module.set_csrf_verified = set_csrf_verified
+
+return module

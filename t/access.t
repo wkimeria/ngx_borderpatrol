@@ -74,7 +74,8 @@ location /auth {
 }
 location /b/testpath {
     set $auth_token $http_auth_token;
-    access_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
+    set $csrf_verified 'false';
+    access_by_lua_file '../../build/usr/share/borderpatrol/border_vars.lua';
     proxy_set_header Auth-Token $auth_token;
 
     # http://hostname/upstream_name/uri -> http://upstream_name/uri
@@ -124,7 +125,7 @@ location @redirect {
     # For Ajax requests, we want to return a 401 with a descriptive message
     if ($http_x_requested_with = "XMLHttpRequest") {
         more_set_headers 'Content-Type: application/json';
-        return 401 '{"CODE": "SESSION_EXPIRED"}';
+        return 401 '{"CODE": "SESSION_EXPIRED"}\n';
     }
     content_by_lua_file '../../build/usr/share/borderpatrol/redirect.lua';
 }
@@ -134,7 +135,8 @@ location /auth {
 }
 location /b/testpath {
     set $auth_token $http_auth_token;
-    content_by_lua_file '../../build/usr/share/borderpatrol/access.lua';
+    set $csrf_verified 'false';
+    content_by_lua_file '../../build/usr/share/borderpatrol/border_vars.lua';
     proxy_set_header Auth-Token $auth_token;
 
     # http://hostname/upstream_name/uri -> http://upstream_name/uri
@@ -153,3 +155,4 @@ X-Requested-With: XMLHttpRequest
 Content-Type: application/json
 --- response_body
 {"CODE": "SESSION_EXPIRED"}
+

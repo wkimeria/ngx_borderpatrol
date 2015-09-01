@@ -46,8 +46,9 @@ location /testpath {
 }
 location /b/testpath {
     echo_location /setup;
+    set $auth_token '';
     set $csrf_verified 'false';
-    access_by_lua_file '../../build/usr/share/borderpatrol/csrf.lua';
+    access_by_lua_file '../../build/usr/share/borderpatrol/border_vars.lua';
     proxy_set_header X-Border-Csrf-Verified $csrf_verified;
 
     # http://hostname/upstream_name/uri -> http://upstream_name/uri
